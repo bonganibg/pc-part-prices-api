@@ -11,14 +11,14 @@ router.post('', (req, res)=>{
     }
 
     new Manufacturer(manu).save()
-    .then((result) =>{        
+    .then((result) =>{
         res.status(201).json({
             message: "information has been saved",
-            manu: result 
+            manu: result
         });
     })
     .catch(err =>{
-        res.status(401).json({            
+        res.status(401).json({
             error: err
         });
     });
@@ -27,9 +27,17 @@ router.post('', (req, res)=>{
 // get manufacturers
 router.get('', (req, res)=>{
 
-    Manufacturer.find()
-    .exec()
-    .then((doc) =>{
+  const manus = req.query.manufacturerIds;
+
+  console.log(manus);
+  var query = {}
+  if (manus !== undefined)
+      query["id"] = manus;
+
+  console.log(query["manufacturerId"]);
+
+    Manufacturer.find(query)
+    .then(async (doc) =>{
         if (doc.length > 0)
         {
             res.status(201).json({

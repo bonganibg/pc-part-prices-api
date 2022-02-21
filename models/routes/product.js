@@ -60,6 +60,7 @@ router.put('', (req, res, next) =>{
     });
 });
 
+// Get Requets
 router.get('', (req, res) =>{
     // Get search query
     const store_id = req.query.store_id;
@@ -118,35 +119,42 @@ router.get('', (req, res) =>{
 
 
 
+// PAGINATION------------------------------------------------------------
+    // Disabling the database pagination for now.
+    // The data that is stored in the database does not have enough detail
+    // to allow for information such as number of items for a brand and
+    // price range to be shown
 
     // Pagination
-    let { page, size } = req.query
-    if (!page)
-    {
-        page = 1
-    }
-    if (!size)
-    {
-        size = 20
-    }
+    // let { page, size } = req.query
+    // if (!page)
+    // {
+    //     page = 1
+    // }
+    // if (!size)
+    // {
+    //     size = 20
+    // }
 
-    const limit = parseInt(size);
-    const skip = (page - 1) * size;
+    // const limit = parseInt(size);
+    // const skip = (page - 1) * size;
+
+
+// PAGINATION------------------------------------------------------------
 
     Products.find(query)
     .where('categoryId').equals(category)
     .where('currentPrice').gte(min).lte(max)
-    .limit(limit)
-    .skip(skip)
     .then(async (prod)=>{
         console.log(query)
 
         if (prod.length > 0)
         {
+
             res.status(201).json({
-                page: page,
-                size: size,
-                product: prod
+                // page: page,
+                // size: size,
+                product: prod,
             })
         }
         else{
