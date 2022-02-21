@@ -18,7 +18,7 @@ var localDB = 'mongodb://localhost:27017/test-new-price'; // Local test database
 var cloudDB = 'mongodb+srv://Alphabg:DHvCHYctncJIViYM@maincluster.o7kgh.mongodb.net/pc-part-price-database?retryWrites=true&w=majority'; // Cloud Database; if you are reading this from a past commit, this has probably changed... Or maybe i'm just saying that so you dont use it... but it has 99.95% probably changed
 app.use(cors());
 
-mongoose.connect(localDB, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(cloudDB, {useNewUrlParser: true, useUnifiedTopology: true})
 .then(() =>{
     console.log("connected to database");
     app.use("/api/prods", routeProduct);

@@ -101,11 +101,11 @@ router.get('', (req, res) =>{
     if (category !== undefined)
         query["categoryId"] = category;
 
-    if (min == undefined)
-        min = 0;
+    // if (min == undefined)
+    //     min = 0;
 
-    if (max == undefined)
-        max = 1000000;
+    // if (max == undefined)
+    //     max = 1000000;
 
     if (manufacturers !== undefined)
         query["manufacturerId"] = manufacturers;
@@ -142,9 +142,7 @@ router.get('', (req, res) =>{
 
 // PAGINATION------------------------------------------------------------
 
-    Products.find(query)
-    .where('categoryId').equals(category)
-    .where('currentPrice').gte(min).lte(max)
+    Products.find(query)    
     .then(async (prod)=>{
         console.log(query)
 
