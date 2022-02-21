@@ -24,15 +24,15 @@ router.post('', (req,res,next) =>
         console.log(product);
         res.status(201).json({
             message: "Posted successfully"
-        });   
-    }).catch(err => {                
-        res.status(500).json({            
-            error: err       
+        });
+    }).catch(err => {
+        res.status(500).json({
+            error: err
         });
     });
 });
 
-router.put('', (req, res, next) =>{  
+router.put('', (req, res, next) =>{
     const product = {
         id: req.body.id,
         name: req.body.name,
@@ -61,13 +61,20 @@ router.put('', (req, res, next) =>{
 });
 
 router.get('', (req, res) =>{
-
-    // get the query information
+    // Get search query
     const store_id = req.query.store_id;
     const price = req.query.price;
     const manu = req.query.manu;
     const prodID = req.query.prodID;
+    const category = req.query.category;
+    const min = req.query.min;
+    const max = req.query.max;
 
+
+    // Search filters
+    const manufacturers = req.query.manufacturers;
+    const chipmaker = req.query.chipmaker;
+    const search = req.query.search;
 
     // Check if there are search filters
     var query = {}
@@ -76,18 +83,43 @@ router.get('', (req, res) =>{
 
 
     if (price !== undefined)
-        query["currentPrice"] = price;        
+        query["currentPrice"] = price;
 
     if (manu !== undefined)
         query["manufacturerId"] = manu
-    
+
     if (prodID !== undefined)
         query["id"] = prodID;
-       
-        
 
 
-    // Pagination 
+
+    // Search terms
+    if (category !== undefined)
+        query["categoryId"] = category;
+
+    if (category !== undefined)
+        query["categoryId"] = category;
+
+    if (min == undefined)
+        min = 0;
+
+    if (max == undefined)
+        max = 1000000;
+
+    if (manufacturers !== undefined)
+        query["manufacturerId"] = manufacturers;
+
+    if (search !== undefined){
+      let regex = new RegExp(search,'i');
+      query["name"] = regex;
+    }
+
+
+
+
+
+
+    // Pagination
     let { page, size } = req.query
     if (!page)
     {
@@ -99,14 +131,16 @@ router.get('', (req, res) =>{
     }
 
     const limit = parseInt(size);
-    const skip = (page - 1) * size;   
+    const skip = (page - 1) * size;
 
     Products.find(query)
+    .where('categoryId').equals(category)
+    .where('currentPrice').gte(min).lte(max)
     .limit(limit)
     .skip(skip)
     .then(async (prod)=>{
         console.log(query)
-        
+
         if (prod.length > 0)
         {
             res.status(201).json({
