@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('', (req,res,next) =>
 {
-    console.log(req.params);
+    console.log(req.query);
     const product = {
         id: req.body.id,
         name: req.body.name,
@@ -68,8 +68,8 @@ router.get('', (req, res) =>{
     const manu = req.query.manu;
     const prodID = req.query.prodID;
     const category = req.query.category;
-    const min = req.query.min;
-    const max = req.query.max;
+    var min = req.query.min;
+    var max = req.query.max;
 
 
     // Search filters
@@ -101,11 +101,11 @@ router.get('', (req, res) =>{
     if (category !== undefined)
         query["categoryId"] = category;
 
-    // if (min == undefined)
-    //     min = 0;
+    if (min == undefined)
+        min = 0;
 
-    // if (max == undefined)
-    //     max = 1000000;
+    if (max == undefined)
+        max = 1000000;
 
     if (manufacturers !== undefined)
         query["manufacturerId"] = manufacturers;
@@ -142,7 +142,8 @@ router.get('', (req, res) =>{
 
 // PAGINATION------------------------------------------------------------
 
-    Products.find(query)    
+    Products.find(query)
+    .where('currentPrice').gte(min).lte(max)
     .then(async (prod)=>{
         console.log(query)
 
