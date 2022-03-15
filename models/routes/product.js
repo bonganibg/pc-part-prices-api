@@ -74,14 +74,15 @@ router.get('', (req, res) =>{
 
     // Search filters
     const manufacturers = req.query.manufacturers;
-    const chipmaker = req.query.chipmaker;
     const search = req.query.search;
+    const order = req.query.order;
+
+    console.log("ORder: " +  order);
 
     // Check if there are search filters
     var query = {}
     if (store_id !== undefined)
         query["storeId"] = store_id;
-
 
     if (price !== undefined)
         query["currentPrice"] = price;
@@ -116,34 +117,9 @@ router.get('', (req, res) =>{
     }
 
 
-
-
-
-// PAGINATION------------------------------------------------------------
-    // Disabling the database pagination for now.
-    // The data that is stored in the database does not have enough detail
-    // to allow for information such as number of items for a brand and
-    // price range to be shown
-
-    // Pagination
-    // let { page, size } = req.query
-    // if (!page)
-    // {
-    //     page = 1
-    // }
-    // if (!size)
-    // {
-    //     size = 20
-    // }
-
-    // const limit = parseInt(size);
-    // const skip = (page - 1) * size;
-
-
-// PAGINATION------------------------------------------------------------
-
     Products.find(query)
     .where('currentPrice').gte(min).lte(max)
+    .sort({currentPrice: order})
     .then(async (prod)=>{
         console.log(query)
 
